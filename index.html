@@ -3,35 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kompetisi Roket Air Nasional 2026</title>
+    <title>LEADERBOARD Kompetisi Roket Air Nasional 2026</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
-<style>
-    /* Mengatur body agar tidak ada margin bawaan */
-    html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        overflow: hidden; /* Mencegah scroll ganda di halaman utama */
-        font-family: Arial, sans-serif;
-    }
+    
+    <style>
+        /* Mengembalikan perilaku scroll normal agar nyaman di HP */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
 
-    h2 {
-        margin: 10px 0;
-        text-align: center;
-        font-size: 1.2rem;
-    }
+        h2 {
+            margin: 15px 0;
+            text-align: center;
+            font-size: 1.2rem;
+            color: #333;
+        }
 
-    /* Iframe akan mengambil sisa tinggi layar */
-    iframe {
-        width: 100%;
-        height: calc(100vh - 50px); /* 100vh dikurangi tinggi teks judul (h2) */
-        border: none;
-    }
-</style>
+        /* Container agar iframe responsif di semua ukuran layar */
+        .iframe-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto; /* Memastikan tabel tidak rusak jika terlalu lebar di HP */
+        }
+
+        /* Iframe menyesuaikan lebar layar, tinggi dibuat besar dan maksimal */
+        iframe {
+            width: 100%;
+            height: 85vh; /* 85% dari tinggi layar perangkat */
+            min-height: 600px; /* Batas minimal tinggi agar tidak terlalu pendek di HP */
+            border: none;
+            display: block;
+        }
+    </style>
 </head>
 <body>
-    <!-- Tempel kode embed iframe dari GSheet di bawah sini -->
-    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTvxgZ3_xbZbN5g07ttMZ4uOy1ItZm15B9y1ZEkiu_tb7289ZDayP3q2EJ14obo5r7H3TmZwXVU99Xc/pubhtml?widget=true&amp;headers=false&amp;rm=minimal"></iframe>
+
+    <h2>Kompetisi Roket Air Nasional 2026</h2>
+    
+    <div class="iframe-container">
+        <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTvxgZ3_xbZbN5g07ttMZ4uOy1ItZm15B9y1ZEkiu_tb7289ZDayP3q2EJ14obo5r7H3TmZwXVU99Xc/pubhtml?widget=true&amp;headers=false&amp;rm=minimal"></iframe>
+    </div>
 
 </body>
 </html>
