@@ -2,9 +2,8 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <!-- Diubah agar mengizinkan pengguna melakukan zoom (cubit layar) -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>Kompetisi Roket Air Nasional 2026</title>
+    <title>LEADERBOARD Kompetisi Roket Air Nasional 2026</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
     
     <style>
@@ -12,6 +11,7 @@
             margin: 0;
             padding: 0;
             width: 100%;
+            overflow-x: hidden; /* Mencegah geser ke samping yang berantakan */
             font-family: Arial, sans-serif;
             background-color: #f9f9f9;
         }
@@ -23,27 +23,46 @@
             color: #333;
         }
 
-        /* Container agar tabel bisa digeser ke samping jika terlalu lebar di HP */
-        .table-responsive {
+        /* Container pembungkus untuk efek skala */
+        .iframe-container {
             width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
+            height: 100vh;
+            overflow: auto; /* Agar bisa di-scroll jika datanya panjang */
+            position: relative;
+            background: white;
         }
 
-        /* Menggunakan embed versi CSV/HTML sederhana atau iframe biasa dengan lebar penuh */
+        /* Trik khusus agar iframe bisa mengecil otomatis di layar HP */
+        .iframe-wrapper {
+            width: 1200px; /* Lebar paksa area GSheet agar tabel tidak terpotong */
+            height: 1000px;
+            transform-origin: 0 0;
+        }
+
         iframe {
             width: 100%;
-            height: 85vh;
-            min-height: 500px;
+            height: 100%;
             border: none;
-            display: block;
+        }
+
+        /* Mengatur skala otomatis khusus untuk HP (layar di bawah 768px) */
+        @media screen and (max-width: 768px) {
+            .iframe-wrapper {
+                /* GSheet akan diperkecil otomatis menyesuaikan lebar layar HP */
+                transform: scale(0.45); 
+                width: 220%; /* Penyeimbang ukuran setelah di-scale */
+                height: 220%;
+            }
         }
     </style>
 </head>
 <body>
+
    
-    <div class="table-responsive">
-        <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTvxgZ3_xbZbN5g07ttMZ4uOy1ItZm15B9y1ZEkiu_tb7289ZDayP3q2EJ14obo5r7H3TmZwXVU99Xc/pubhtml?widget=true&amp;headers=false"></iframe>
+    <div class="iframe-container">
+        <div class="iframe-wrapper">
+            <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTvxgZ3_xbZbN5g07ttMZ4uOy1ItZm15B9y1ZEkiu_tb7289ZDayP3q2EJ14obo5r7H3TmZwXVU99Xc/pubhtml?widget=true&amp;headers=false"></iframe>
+        </div>
     </div>
 
 </body>
