@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>LEADERBOARD Kompetisi Roket Air Nasional 2026</title>
+    <title>A LEADERBOARD Kompetisi Roket Air Nasional 2026</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
     
     <style>
@@ -11,31 +11,25 @@
             margin: 0;
             padding: 0;
             width: 100%;
-            overflow-x: hidden; /* Mencegah geser ke samping yang berantakan */
+            height: 100%;
+            overflow-x: hidden;
             font-family: Arial, sans-serif;
             background-color: #f9f9f9;
         }
 
-        h2 {
-            margin: 15px 0;
-            text-align: center;
-            font-size: 1.2rem;
-            color: #333;
-        }
-
-        /* Container pembungkus untuk efek skala */
+        /* Container utama memenuhi layar */
         .iframe-container {
             width: 100%;
             height: 100vh;
-            overflow: auto; /* Agar bisa di-scroll jika datanya panjang */
+            overflow: auto;
             position: relative;
             background: white;
         }
 
-        /* Trik khusus agar iframe bisa mengecil otomatis di layar HP */
+        /* Wrapper standar untuk laptop (tanpa paksaan aneh-aneh) */
         .iframe-wrapper {
-            width: 1200px; /* Lebar paksa area GSheet agar tabel tidak terpotong */
-            height: 1000px;
+            width: 100%;
+            height: 100%;
             transform-origin: 0 0;
         }
 
@@ -45,20 +39,20 @@
             border: none;
         }
 
-        /* Mengatur skala otomatis khusus untuk HP (layar di bawah 768px) */
+        /* Penyesuaian khusus untuk HP (layar di bawah 768px) */
         @media screen and (max-width: 768px) {
             .iframe-wrapper {
-                /* GSheet akan diperkecil otomatis menyesuaikan lebar layar HP */
-                transform: scale(0.45); 
-                width: 220%; /* Penyeimbang ukuran setelah di-scale */
-                height: 220%;
+                /* Skala diperhalus agar tidak terlalu kecil/besar */
+                transform: scale(0.75); 
+                /* Lebar dan tinggi disesuaikan dengan proporsi skala 0.75 */
+                width: 133.33%; 
+                height: 133.33%;
             }
         }
     </style>
 </head>
 <body>
 
-   
     <div class="iframe-container">
         <div class="iframe-wrapper">
             <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTvxgZ3_xbZbN5g07ttMZ4uOy1ItZm15B9y1ZEkiu_tb7289ZDayP3q2EJ14obo5r7H3TmZwXVU99Xc/pubhtml?widget=true&amp;headers=false"></iframe>
