@@ -2,8 +2,8 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>A LEADERBOARD Kompetisi Roket Air Nasional 2026</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEADERBOARD Kompetisi Roket Air Nasional 2026</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
     
     <style>
@@ -11,52 +11,41 @@
             margin: 0;
             padding: 0;
             width: 100%;
-            height: 100%;
-            overflow-x: hidden;
             font-family: Arial, sans-serif;
             background-color: #f9f9f9;
         }
 
-        /* Container utama memenuhi layar */
+        h2 {
+            margin: 15px 0;
+            text-align: center;
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        /* Container untuk membungkus iframe dan memotong bagian atasnya */
         .iframe-container {
             width: 100%;
             height: 100vh;
-            overflow: auto;
+            min-height: 600px;
+            overflow: hidden; /* Bagian yang keluar dari kotak akan disembunyikan */
             position: relative;
-            background: white;
         }
 
-        /* Wrapper standar untuk laptop (tanpa paksaan aneh-aneh) */
-        .iframe-wrapper {
-            width: 100%;
-            height: 100%;
-            transform-origin: 0 0;
-        }
-
+        /* Iframe digeser ke atas agar judul file GSheet tersembunyi di luar kotak */
         iframe {
             width: 100%;
-            height: 100%;
+            height: calc(100% + 50px); /* Dilebihkan tingginya */
+            position: absolute;
+            top: -45px; /* Ditarik ke atas sebesar 45px untuk menutupi nama file */
+            left: 0;
             border: none;
-        }
-
-        /* Penyesuaian khusus untuk HP (layar di bawah 768px) */
-        @media screen and (max-width: 768px) {
-            .iframe-wrapper {
-                /* Skala diperhalus agar tidak terlalu kecil/besar */
-                transform: scale(0.75); 
-                /* Lebar dan tinggi disesuaikan dengan proporsi skala 0.75 */
-                width: 133.33%; 
-                height: 133.33%;
-            }
         }
     </style>
 </head>
 <body>
-
+   
     <div class="iframe-container">
-        <div class="iframe-wrapper">
-            <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTvxgZ3_xbZbN5g07ttMZ4uOy1ItZm15B9y1ZEkiu_tb7289ZDayP3q2EJ14obo5r7H3TmZwXVU99Xc/pubhtml?widget=true&amp;headers=false"></iframe>
-        </div>
+        <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTvxgZ3_xbZbN5g07ttMZ4uOy1ItZm15B9y1ZEkiu_tb7289ZDayP3q2EJ14obo5r7H3TmZwXVU99Xc/pubhtml?widget=true&amp;headers=false&amp;rm=minimal"></iframe>
     </div>
 
 </body>
