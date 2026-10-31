@@ -11,6 +11,8 @@
             margin: 0;
             padding: 0;
             width: 100%;
+            height: 100%;
+            overflow: hidden;
             font-family: Arial, sans-serif;
             background-color: #f9f9f9;
         }
@@ -39,6 +41,59 @@
             top: -45px; /* Ditarik ke atas sebesar 45px untuk menutupi nama file */
             left: 0;
             border: none;
+            z-index: 1;
+        }
+
+        /* Styling untuk Animasi Roket dan Semburan Air Berwarna */
+        #rocket-animation-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        .rocket-wrapper {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            will-change: transform;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rocket-icon {
+            font-size: 32px;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+            transform: rotate(45deg);
+            display: inline-block;
+        }
+
+        /* Partikel Semburan Air Warna-warni */
+        .water-particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: waterSpray 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+            mix-blend-mode: multiply;
+        }
+
+        @keyframes waterSpray {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.9;
+            }
+            50% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translate(var(--dx), var(--dy)) scale(0.2);
+                opacity: 0;
+            }
         }
     </style>
 </head>
@@ -46,7 +101,149 @@
    
     <div class="iframe-container">
         <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTvxgZ3_xbZbN5g07ttMZ4uOy1ItZm15B9y1ZEkiu_tb7289ZDayP3q2EJ14obo5r7H3TmZwXVU99Xc/pubhtml?widget=true&amp;headers=false&amp;rm=minimal"></iframe>
+        
+        <!-- Layer Animasi Roket dan Semburan Air -->
+        <div id="rocket-animation-layer">
+            <div class="rocket-wrapper" id="rocketObj">
+                <div class="rocket-icon">🚀</div>
+            </div>
+        </div>
     </div>
 
+    <script>
+        const rocketObj = document.getElementById('rocketObj');
+        const layer = document.getElementById('rocket-animation-layer');
+
+        let startTime = null;
+        const duration = 24000; // Durasi satu putaran penuh mengelilingi window (dalam milidetik)
+
+        // Palet warna warni untuk semburan air roket
+        const waterColors = [
+            'rgba(0, 150, 255, 0.8)',   // Biru Air
+            'rgba(0, 229, 255, 0.8)',   // Cyan Terang
+            'rgba(100, 255, 218, 0.8)', // Aqua
+            'rgba(255, 0, 128, 0.8)',   // Pink Magenta
+            'rgba(255, 215, 0, 0.8)',   // Kuning Emas
+            'rgba(147, 112, 219, 0.8)'  // Ungu Pastel
+        ];
+
+        function getBorderPosition(progress, width, height, margin) {
+            const perimeter = 2 * (width + height);
+            const dist = progress * perimeter;
+
+            let x = 0, y = 0, vx = 0, vy = 0;
+
+            const w = width - 2 * margin;
+            const h = height - 2 * margin;
+            const topEdge = w;
+            const rightEdge = topEdge + h;
+            const bottomEdge = rightEdge + w;
+
+            if (dist <= topEdge) {
+                x = margin + dist;
+                y = margin;
+                vx = 1; vy = 0;
+            } else if (dist <= rightEdge) {
+                x = margin + w;
+                y = margin + (dist - topEdge);
+                vx = 0; vy = 1;
+            } else if (dist <= bottomEdge) {
+                x = margin + w - (dist - rightEdge);
+                y = margin + h;
+                vx = -1; vy = 0;
+            } else {
+                x = margin;
+                y = margin + h - (dist - bottomEdge);
+                vx = 0; vy = -1;
+            }
+            return { x, y, vx, vy };
+        }
+
+        function animateRocket(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+            const progress = (elapsed % duration) / duration;
+
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            const margin = 60; // Jarak dari tepi window
+
+            // Hitung posisi dasar di keliling window
+            const basePos = getBorderPosition(progress, width, height, margin);
+
+            // Tambahkan gerakan gelombang zig-zag sinusoidal yang mulus dan dinamis
+            const zigZagFrequency = 16; // Jumlah gelombang dalam satu putaran
+            const zigZagAmplitude = 45; // Lebar simpangan gelombang zig-zag
+            
+            const angle = progress * Math.PI * 2 * zigZagFrequency;
+            const sineWave = Math.sin(angle) * zigZagAmplitude;
+
+            // Terapkan offset tegak lurus terhadap arah gerak untuk efek zig-zag bergelombang
+            const x = basePos.x - basePos.vy * sineWave;
+            const y = basePos.y + basePos.vx * sineWave;
+
+            // Hitung orientasi rotasi roket agar selalu menghadap ke arah jalurnya secara smooth
+            const nextProgress = (progress + 0.001) % 1;
+            const nextBasePos = getBorderPosition(nextProgress, width, height, margin);
+            const nextAngle = nextProgress * Math.PI * 2 * zigZagFrequency;
+            const nextSineWave = Math.sin(nextAngle) * zigZagAmplitude;
+            const nextX = nextBasePos.x - nextBasePos.vy * nextSineWave;
+            const nextY = nextBasePos.y + nextBasePos.vx * nextSineWave;
+
+            const dx = nextX - x;
+            const dy = nextY - y;
+            const rot = Math.atan2(dy, dx) * (180 / Math.PI) + 45; // +45 derajat karena ikon emoji roket miring bawaan
+
+            // Posisikan elemen roket
+            rocketObj.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg)`;
+
+            // Buat efek semburan air warna-warni dari bagian belakang roket secara kontinu
+            if (Math.random() < 0.75) {
+                createWaterParticle(x + 25, y + 25, -dx, -dy);
+            }
+
+            requestAnimationFrame(animateRocket);
+        }
+
+        function createWaterParticle(rx, ry, moveX, moveY) {
+            const particle = document.createElement('div');
+            particle.className = 'water-particle';
+
+            const size = Math.floor(Math.random() * 8) + 6; // Ukuran tetesan air bervariasi (6px - 14px)
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${rx}px`;
+            particle.style.top = `${ry}px`;
+
+            // Pilih warna acak dari palet warna-warni air
+            const randomColor = waterColors[Math.floor(Math.random() * waterColors.length)];
+            particle.style.backgroundColor = randomColor;
+            particle.style.boxShadow = `0 0 8px ${randomColor}`;
+
+            // Hitung arah semburan menyembur berlawanan arah laju roket dengan sedikit sebaran acak
+            const spreadFactor = 35;
+            const angleNoise = (Math.random() - 0.5) * 1.5;
+            const targetDx = (moveX * 15) + ((Math.random() - 0.5) * spreadFactor) + (Math.sin(angleNoise) * 20);
+            const targetDy = (moveY * 15) + ((Math.random() - 0.5) * spreadFactor) + (Math.cos(angleNoise) * 20);
+
+            particle.style.setProperty('--dx', `${targetDx}px`);
+            particle.style.setProperty('--dy', `${targetDy}px`);
+
+            layer.appendChild(particle);
+
+            // Hapus partikel setelah animasi selesai untuk performa memori yang optimal
+            setTimeout(() => {
+                particle.remove();
+            }, 1200);
+        }
+
+        // Mulai animasi loop
+        requestAnimationFrame(animateRocket);
+
+        // Menyesuaikan ulang ketika ukuran window berubah agar tetap responsif sempurna
+        window.addEventListener('resize', () => {
+            // Layout tetap aman terjaga tanpa ada perubahan struktur utama
+        });
+    </script>
 </body>
 </html>
